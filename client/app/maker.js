@@ -46,6 +46,8 @@ const TaskList = (props) => {
         );
     }
 
+    console.log(props);
+
     const taskNodes = props.tasks.map((task) => {
         return (
             <div key={task._id} className="task">
@@ -65,7 +67,6 @@ const TaskList = (props) => {
 
 const loadTasksFromServer = () => {
     sendAjax('GET', '/getTasks', null, (data) => {
-        console.log(data);
         ReactDOM.render(
             <TaskList tasks={data.tasks} />,
             document.querySelector("#tasks")

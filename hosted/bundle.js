@@ -66,6 +66,7 @@ var TaskList = function TaskList(props) {
     }, "No Tasks Yet"));
   }
 
+  console.log(props);
   var taskNodes = props.tasks.map(function (task) {
     return /*#__PURE__*/React.createElement("div", {
       key: task._id,
@@ -85,7 +86,6 @@ var TaskList = function TaskList(props) {
 
 var loadTasksFromServer = function loadTasksFromServer() {
   sendAjax('GET', '/getTasks', null, function (data) {
-    console.log(data);
     ReactDOM.render( /*#__PURE__*/React.createElement(TaskList, {
       tasks: data.tasks
     }), document.querySelector("#tasks"));

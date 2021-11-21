@@ -37,7 +37,7 @@ const makeTask = (req, res) => {
       return res.status(400).json({ error: 'Task already exists' });
     }
 
-    return res.status(400).json({ erro: 'An error occurred' });
+    return res.status(400).json({ error: 'An error occurred' });
   });
   
   return taskPromise;
@@ -52,7 +52,7 @@ const getTasks = (request, response) => {
       console.log(err);
       return res.status(400).json({ error: 'An error occurred' });
     }
-
+    console.log(docs);
     return res.json({ tasks: docs });
   });
 };
