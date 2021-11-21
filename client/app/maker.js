@@ -8,7 +8,7 @@ const handleTask = (e) => {
         return false;
     }
 
-    sendAjax('POST', $("#taskForm").attr("action"), $("#taskForm").serialize(), function() {
+    sendAjax('POST', $("#taskForm").attr("action"), $("#taskForm").serialize(), () => {
         loadTasksFromServer();
     });
 
@@ -63,7 +63,8 @@ const TaskList = (props) => {
 };
 
 const loadTasksFromServer = () => {
-    sendAjex('GET', '/getTasks', null, (data) => {
+    sendAjax('GET', '/getTasks', null, (data) => {
+        console.log(data);
         ReactDOM.render(
             <TaskList tasks={data.tasks} />,
             document.querySelector("#tasks")
@@ -87,7 +88,7 @@ const setup = (csrf) => {
 
 const getToken = () => {
     sendAjax('GET', '/getToken', null, (result) => {
-        setup(result.crsfToken);
+        setup(result.csrfToken);
     });
 };
 

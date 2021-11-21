@@ -83,7 +83,8 @@ var TaskList = function TaskList(props) {
 };
 
 var loadTasksFromServer = function loadTasksFromServer() {
-  sendAjex('GET', '/getTasks', null, function (data) {
+  sendAjax('GET', '/getTasks', null, function (data) {
+    console.log(data);
     ReactDOM.render( /*#__PURE__*/React.createElement(TaskList, {
       tasks: data.tasks
     }), document.querySelector("#tasks"));
@@ -102,7 +103,7 @@ var setup = function setup(csrf) {
 
 var getToken = function getToken() {
   sendAjax('GET', '/getToken', null, function (result) {
-    setup(result.crsfToken);
+    setup(result.csrfToken);
   });
 };
 
