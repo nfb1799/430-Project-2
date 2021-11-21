@@ -23,6 +23,7 @@ const makeTask = (req, res) => {
     name: req.body.name,
     date: req.body.date,
     description: req.body.description,
+    owner: req.session.account._id,
   };
 
   const newTask = new Task.TaskModel(taskData);
