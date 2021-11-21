@@ -29,7 +29,6 @@ const makeTask = (req, res) => {
 
   const taskPromise = newTask.save();
 
-  // CHANGE THIS IF YOU RENAME MAKER
   taskPromise.then(() => res.json({ redirect: '/maker' }));
 
   taskPromise.catch((err) => {
@@ -40,7 +39,7 @@ const makeTask = (req, res) => {
 
     return res.status(400).json({ erro: 'An error occurred' });
   });
-
+  
   return taskPromise;
 };
 

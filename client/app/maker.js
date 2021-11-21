@@ -3,13 +3,14 @@ const handleTask = (e) => {
 
     $("#taskMessage").animate({width:'hide'},350);
 
-    if($("#taskName").val() === '' || $("taskDate").val() === '' || $("#taskDescription").val() === '') {
+    if($("#taskName").val() == '' || $("taskDate").val() == '' || $("#taskDescription").val() == '') {
         handleError("Error: All fields are required!");
         return false;
     }
 
     sendAjax('POST', $("#taskForm").attr("action"), $("#taskForm").serialize(), () => {
         loadTasksFromServer();
+        console.log($("#taskForm").attr("action"));
     });
 
     return false;
