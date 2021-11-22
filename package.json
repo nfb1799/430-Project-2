@@ -1,18 +1,15 @@
 {
-  "name": "Logins",
+  "name": "TaskMaker",
   "version": "1.0.0",
   "engines": {
     "node": "12.16.0",
     "npm": "6.13.7"
   },
-  "description": "A Simple Login Example using Node.js, Mongo and Redis",
+  "description": "Task Maker App using Node.js, Mongo and Redis",
   "main": "./server/app.js",
   "scripts": {
-    "buildLoginBundle": "babel ./client/login ./client/helper --presets @babel/preset-react --out-file ./hosted/loginBundle.js",
-    "buildAppBundle": "babel ./client/app ./client/helper --presets @babel/preset-react --out-file ./hosted/bundle.js",
-    "build": "npm run buildLoginBundle && npm run buildAppBundle",
-    "watchLoginBundle": "babel --watch ./client/login ./client/helper --presets @babel/preset-react --out-file ./hosted/loginBundle.js",
-    "watchAppBundle": "babel --watch ./client/app ./client/helper --presets @babel/preset-react --out-file ./hosted/bundle.js",
+    "build": "gulp build",
+    "watch": "gulp watch", 
     "nodemon": "nodemon --watch ./server ./server/app.js",
     "start": "node ./server/app.js",
     "pretest": "eslint ./server --fix",
@@ -24,7 +21,7 @@
     "Redis",
     "Login"
   ],
-  "author": "Cody Van De Mark",
+  "author": "Nik Barbero",
   "license": "Apache 2.0",
   "devDependencies": {
     "@babel/cli": "^7.15.7",
@@ -35,7 +32,15 @@
     "eslint": "^8.1.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-plugin-import": "^2.25.2",
-    "nodemon": "^2.0.14"
+    "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
+    "gulp-cached": "^1.1.1",
+    "gulp-eslint": "^6.0.0",
+    "gulp-nodemon": "^2.5.0",
+    "gulp-sass": "^5.0.0",
+    "node-sass": "^6.0.1",
+    "nodemon": "^2.0.14",
+    "sass": "^1.43.4"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
