@@ -1,3 +1,7 @@
+$backGroundColor: grey;
+$navHighlightColor: lightgrey;
+$navFontColor: white;
+
 html, body {
     height: 100%;
     width: 100%;
@@ -10,52 +14,52 @@ html, body {
     height: 40px;
     width: 40;
     padding-top: 5px;
-    float:left;
+    float: left;
     border-radius: 8px;
 }
 
 nav {
     width: 100%;
     height: 50px;
-    background-color: #55acee;
-}
-
-nav:nth-child(1) {
-    padding-left: 25px;
+    background-color: $backGroundColor;
 }
 
 .navlink {
     padding: 5px;
     padding-top: 12px;
     padding-left: 20px;
-    color: white;
+    color: $navFontColor;
     font-size: 1.3em;
-    float: left;
+    float: right;
 }
 
 .navlink a, .navlink a:link, .navlink a:visited, .navlink a:hover, .navlink a:active {
-    color: white;
-    text-decoration: none;
+    color: $navFontColor;
     padding: 5px;
     border-radius: 4px;
-    background-color: #55acee;
+    background-color: $backGroundColor;
     transition: background-color 0.4s ease;
 }
 
 .navlink a:hover {
-    transition: background-color 0.8s ease;
-    background-color: #66bdff;
+    background-color: $navHighlightColor;
+    color: black;
+    transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 .taskForm {
-    border: 2px solid #338acc;
-    height: 35px;
-    width: 1000px;
-    margin-top:0px;
-    padding-top:10px;
-    background-color: #55acee;
-    border-bottom-right-radius: 4px;
-    border-top-right-radius: 4px;
+    background-color: $backGroundColor;
+    display: grid;
+    grid-template-areas: 
+        "label input"
+        "label input"
+        "label input"
+        "blank submit";
+    width: 20%;
+    margin: auto;
+    margin-top: 10px;
+    padding: 10px;
+    row-gap: 4px;
 }
 
 .taskForm label {
@@ -64,21 +68,17 @@ nav:nth-child(1) {
     margin-left: 10px;
     font-size: 1.2em;
     float: left;
-    color: white;
-}
-
-.taskForm input[type=text] {
-    float:left;
+    color: $navFontColor;
 }
 
 .makeTaskSubmit {
+    grid-area: submit;
+    justify-self: end;
     transition: background-color 0.4s ease;
-    display: inline;
     width: 90px;
-    background-color: #55acee;
+    background-color: black;
     border-radius: 2px;
     color: white;
-    text-decoration: none;
 }
 
 .makeTaskSubmit:link, .makeTaskSubmit:visited, .makeTaskSubmit:hover, .makeTaskSubmit:active {
@@ -86,8 +86,9 @@ nav:nth-child(1) {
 }
 
 .makeTaskSubmit:hover {
-    transition: background-color 0.4s ease;
-    background-color: #338acc;
+    transition: background-color 0.4s ease, color 0.4s ease;
+    background-color: white;
+    color: black;
 }
 
 .mainForm {
