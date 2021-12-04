@@ -41,7 +41,7 @@ const watch = () => {
     nodemon({
         script: './server/app.js',
         ignore: ['node_modules/', 'scss/', 'client/'],
-        ext: 'js html css', //extenstions to watch
+        ext: 'js html css scss', //extenstions to watch
     });
 };
 
