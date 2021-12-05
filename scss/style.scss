@@ -131,7 +131,7 @@ nav {
         "label input"
         "label input"
         "blank submit";
-    width: 80%;
+    width: 60%;
     margin: auto;
     margin-top: 10px;
     padding: 10px;
@@ -140,7 +140,7 @@ nav {
 
 .taskForm label {
     display: inline-block;
-    width: 100px;
+    width: 150px;
     margin-left: 10px;
     font-size: 1.2em;
     float: left;
@@ -149,32 +149,6 @@ nav {
 
 #loginForm > *, #signupForm > * {
     margin-top: 8px;
-}
-
-#changePassForm {
-    background-color: $backGroundColor;
-    border: 2px solid black;
-    display: grid;
-    grid-template-areas: 
-        "label input"
-        "label input"
-        "label input"
-        "label input"
-        "blank submit";
-    width: 80%;
-    margin: auto;
-    margin-top: 10px;
-    padding: 10px;
-    row-gap: 4px;
-    
-    label {
-        display: inline-block;
-        width: 150px;
-        margin-left: 10px;
-        font-size: 1.2em;
-        float: left;
-        color: $navFontColor;
-    }
 }
 
 .makeTaskSubmit, .changePassSubmit {

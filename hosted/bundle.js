@@ -13,7 +13,6 @@ var handleTask = function handleTask(e) {
 
   sendAjax('POST', $("#taskForm").attr("action"), $("#taskForm").serialize(), function () {
     loadTasksFromServer();
-    console.log($("#taskForm").attr("action"));
   });
   return false;
 };
@@ -81,7 +80,6 @@ var TaskList = function TaskList(props) {
     }, "No Tasks Yet"));
   }
 
-  console.log(props);
   var taskNodes = props.tasks.map(function (task) {
     return /*#__PURE__*/React.createElement("div", {
       key: task._id,
@@ -116,13 +114,6 @@ var ChangePassForm = function ChangePassForm(props) {
     method: "POST",
     className: "taskForm"
   }, /*#__PURE__*/React.createElement("label", {
-    htmlFor: "username"
-  }, "Username: "), /*#__PURE__*/React.createElement("input", {
-    id: "username",
-    type: "text",
-    name: "username",
-    placeholder: "Username"
-  }), /*#__PURE__*/React.createElement("label", {
     htmlFor: "currPassword"
   }, "Current Password: "), /*#__PURE__*/React.createElement("input", {
     id: "currPass",
@@ -145,6 +136,10 @@ var ChangePassForm = function ChangePassForm(props) {
     placeholder: "New Password"
   }), /*#__PURE__*/React.createElement("input", {
     type: "hidden",
+    name: "username",
+    value: props.username
+  }), /*#__PURE__*/React.createElement("input", {
+    type: "hidden",
     name: "_csrf",
     value: props.csrf
   }), /*#__PURE__*/React.createElement("input", {
@@ -163,9 +158,12 @@ var createWelcomeMessage = function createWelcomeMessage() {
 };
 
 var createChangePassForm = function createChangePassForm(csrf) {
-  ReactDOM.render( /*#__PURE__*/React.createElement(ChangePassForm, {
-    csrf: csrf
-  }), document.querySelector("#makeTask"));
+  sendAjax('GET', '/getUser', null, function (data) {
+    ReactDOM.render( /*#__PURE__*/React.createElement(ChangePassForm, {
+      csrf: csrf,
+      username: data.username
+    }), document.querySelector("#makeTask"));
+  });
 };
 
 var loadTasksFromServer = function loadTasksFromServer() {

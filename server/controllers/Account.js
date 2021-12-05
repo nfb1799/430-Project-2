@@ -89,7 +89,7 @@ const getUser = (request, response) => {
 const changePass = (request, response) => {
   const req = request;
   const res = response;
-  
+
   // cast to strings to cover up some security flaws
   const username = `${req.body.username}`;
   const currPass = `${req.body.currPass}`;

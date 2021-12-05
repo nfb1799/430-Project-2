@@ -98,14 +98,13 @@ const ChangePassForm = (props) => {
             method="POST"
             className="taskForm"
         >
-            <label htmlFor="username">Username: </label>
-            <input id="username" type="text" name="username" placeholder="Username" />
             <label htmlFor="currPassword">Current Password: </label>
             <input id="currPass" type="password" name="currPass" placeholder="Current Pass" />
             <label htmlFor="newPassword">New Password: </label>
             <input id="newPass" type="password" name="newPass" placeholder="New Password" />
             <label htmlFor="newPassword2">Retype Password: </label>
             <input id="newPass2" type="password" name="newPass2" placeholder="New Password" />
+            <input type="hidden" name="username" value={props.username} />
             <input type="hidden" name="_csrf" value={props.csrf} />
             <input className="changePassSubmit" type="submit" value="Update" />
         </form>
@@ -122,10 +121,12 @@ const createWelcomeMessage = () => {
 };
 
 const createChangePassForm = (csrf) => {
-    ReactDOM.render(
-        <ChangePassForm csrf={csrf} />,
-        document.querySelector("#makeTask")
-    );
+    sendAjax('GET', '/getUser', null, (data) => {
+        ReactDOM.render(
+            <ChangePassForm csrf={csrf} username={data.username} />,
+            document.querySelector("#makeTask")
+        );
+    });
 };
 
 const loadTasksFromServer = () => {
