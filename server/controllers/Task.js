@@ -58,6 +58,23 @@ const getTasks = (request, response) => {
   });
 };
 
+const deleteTask = (request, response) => {
+  const req = request;
+  const res = response;
+  console.log("indeletetask");
+  console.log(req.body);
+
+  return Task.TaskModel.deleteTask(req.session.account._id, req.body.name, req.body.description, (err, docs) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).json({ error: 'An error occurred' });
+    }
+
+    return res.json({ tasks: docs });
+  });
+};
+
 module.exports.makerPage = makerPage;
 module.exports.getTasks = getTasks;
 module.exports.makeTask = makeTask;
+module.exports.deleteTask = deleteTask;

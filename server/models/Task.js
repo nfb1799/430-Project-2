@@ -53,6 +53,16 @@ TaskSchema.statics.findByOwner = (ownerId, callback) => {
   return TaskModel.find(search).select('name date description').lean().exec(callback);
 };
 
+TaskSchema.statics.deleteTask = (ownerId, name, description, callback) => {
+  const search = {
+    owner: convertId(ownerId),
+    name,
+    description,
+  };
+
+  return TaskModel.deleteOne(search, callback);
+};
+
 TaskModel = mongoose.model('Task', TaskSchema);
 
 module.exports.TaskModel = TaskModel;

@@ -8,8 +8,9 @@ const handleTask = (e) => {
         return false;
     }
 
+    console.log($("#taskForm").serialize());
     sendAjax('POST', $("#taskForm").attr("action"), $("#taskForm").serialize(), () => {
-        loadTasksFromServer();
+        loadTasksFromServer($("#csrf").val());
     });
 
     return false;
@@ -30,6 +31,15 @@ const handleChangePass = (e) => {
     return false;
 };
 
+const deleteTask = (e, name, desc, csrf) => {
+    e.preventDefault();
+
+    console.log(csrf);
+    sendAjax('DELETE', '/deleteTask', `name=${name}&description=${desc}&_csrf=${csrf}`, () => {
+        loadTasksFromServer(csrf);
+    });
+};
+
 const TaskForm = (props) => {
     return(
         <form id="taskForm"
@@ -45,7 +55,7 @@ const TaskForm = (props) => {
             <input id="taskName" type="text" name="name" placeholder="Task Title" />
             <label htmlFor="description">Description: </label>
             <input id="taskDescription" type="text" name="description" placeholder="Task Description" />
-            <input type="hidden" name="_csrf" value={props.csrf} />
+            <input id="csrf" type="hidden" name="_csrf" value={props.csrf} />
             <input className="makeTaskSubmit" type="submit" value="Make Task" />
         </form>
     );
@@ -60,9 +70,11 @@ const TaskList = (props) => {
         );
     }
 
+    console.log(props);
+
     const taskNodes = props.tasks.map((task) => {
         return (
-            <div key={task._id} className="task">
+            <div key={task._id} className="task" onClick={(e) => { deleteTask(e, task.name, task.description, props.csrf) }}>
                 <h3 className="taskDate">Date: {task.date}</h3>
                 <h3 className="taskName">Task: {task.name}</h3>
                 <h3 className="taskDescription">Description: {task.description}</h3>
@@ -90,6 +102,7 @@ const WelcomeMessage = (props) => {
 };
 
 const ChangePassForm = (props) => {
+    console.log(props);
     return(
         <form id="changePassForm"
             onSubmit={handleChangePass}
@@ -129,10 +142,10 @@ const createChangePassForm = (csrf) => {
     });
 };
 
-const loadTasksFromServer = () => {
+const loadTasksFromServer = (csrf) => {
     sendAjax('GET', '/getTasks', null, (data) => {
         ReactDOM.render(
-            <TaskList tasks={data.tasks} />,
+            <TaskList tasks={data.tasks} csrf={csrf} />,
             document.querySelector("#tasks")
         );
     });
@@ -158,7 +171,7 @@ const setup = (csrf) => {
     );
 
     createWelcomeMessage();
-    loadTasksFromServer();
+    loadTasksFromServer(csrf);
 };
 
 const getToken = () => {

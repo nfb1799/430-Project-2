@@ -11,8 +11,9 @@ var handleTask = function handleTask(e) {
     return false;
   }
 
+  console.log($("#taskForm").serialize());
   sendAjax('POST', $("#taskForm").attr("action"), $("#taskForm").serialize(), function () {
-    loadTasksFromServer();
+    loadTasksFromServer($("#csrf").val());
   });
   return false;
 };
@@ -30,6 +31,14 @@ var handleChangePass = function handleChangePass(e) {
 
   sendAjax('POST', $("#changePassForm").attr("action"), $("#changePassForm").serialize(), redirect);
   return false;
+};
+
+var deleteTask = function deleteTask(e, name, desc, csrf) {
+  e.preventDefault();
+  console.log(csrf);
+  sendAjax('DELETE', '/deleteTask', "name=".concat(name, "&description=").concat(desc, "&_csrf=").concat(csrf), function () {
+    loadTasksFromServer(csrf);
+  });
 };
 
 var TaskForm = function TaskForm(props) {
@@ -61,6 +70,7 @@ var TaskForm = function TaskForm(props) {
     name: "description",
     placeholder: "Task Description"
   }), /*#__PURE__*/React.createElement("input", {
+    id: "csrf",
     type: "hidden",
     name: "_csrf",
     value: props.csrf
@@ -80,10 +90,14 @@ var TaskList = function TaskList(props) {
     }, "No Tasks Yet"));
   }
 
+  console.log(props);
   var taskNodes = props.tasks.map(function (task) {
     return /*#__PURE__*/React.createElement("div", {
       key: task._id,
-      className: "task"
+      className: "task",
+      onClick: function onClick(e) {
+        deleteTask(e, task.name, task.description, props.csrf);
+      }
     }, /*#__PURE__*/React.createElement("h3", {
       className: "taskDate"
     }, "Date: ", task.date), /*#__PURE__*/React.createElement("h3", {
@@ -106,6 +120,7 @@ var WelcomeMessage = function WelcomeMessage(props) {
 };
 
 var ChangePassForm = function ChangePassForm(props) {
+  console.log(props);
   return /*#__PURE__*/React.createElement("form", {
     id: "changePassForm",
     onSubmit: handleChangePass,
@@ -166,10 +181,11 @@ var createChangePassForm = function createChangePassForm(csrf) {
   });
 };
 
-var loadTasksFromServer = function loadTasksFromServer() {
+var loadTasksFromServer = function loadTasksFromServer(csrf) {
   sendAjax('GET', '/getTasks', null, function (data) {
     ReactDOM.render( /*#__PURE__*/React.createElement(TaskList, {
-      tasks: data.tasks
+      tasks: data.tasks,
+      csrf: csrf
     }), document.querySelector("#tasks"));
   });
 };
@@ -188,7 +204,7 @@ var setup = function setup(csrf) {
     tasks: []
   }), document.querySelector("#tasks"));
   createWelcomeMessage();
-  loadTasksFromServer();
+  loadTasksFromServer(csrf);
 };
 
 var getToken = function getToken() {
