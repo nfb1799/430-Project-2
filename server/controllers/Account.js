@@ -79,6 +79,63 @@ const signup = (request, response) => {
   });
 };
 
+// Updates the users password and handles any errors
+const changePass = (request, response) => {
+  const req = request;
+  const res = response;
+
+  console.log(req.body);
+  // cast to strings to cover up some security flaws
+  const username = `${req.body.username}`;
+  const currPass = `${req.body.currPass}`;
+  const newPass = `${req.body.newPass}`;
+  const newPass2 = `${req.body.newPass2}`;
+
+  // Checks to see if all fields were entered
+  if (!currPass || !newPass || !newPass2) {
+    return res.status(400).json({ error: 'All fields are required!' });
+  }
+
+  // Checks to see if the new passwords match
+  if (newPass !== newPass2) {
+    return res.status(400).json({ error: 'Passwords do not match!' });
+  }
+
+  // Authenticates the old password
+  // Throws an error if it does not match
+  // Else, updates the password and redirects to /maker
+  return Account.AccountModel.authenticate(username, currPass, (err, account) => {
+    if (err || !account) {
+      return res.status(401).json({ error: 'Current Password does not match!' });
+    }
+
+    return Account.AccountModel.generateHash(newPass, (salt, hash) => {
+      Account.AccountModel.findByUsername(username, (error, doc) => {
+        if (error) {
+          return res.status(400).json({ error: 'An unexpected error occurred.' });
+        }
+
+        if (!doc) {
+          return res.status(400).json({ error: 'Account not found!' });
+        }
+
+        const currAccount = doc;
+        currAccount.salt = salt;
+        currAccount.password = hash;
+
+        const savePromise = currAccount.save();
+
+        savePromise.then(() => {
+          req.session.account = Account.AccountModel.toAPI(currAccount);
+          return res.json({ redirect: '/maker' });
+        });
+
+        return false;
+      }); // findByUsername()
+    }); // generateHash()
+  }); // authenticate()
+}; // changePass()
+
 const getToken = (request, response) => {
   const req = request;
   const res = response;
@@ -94,4 +151,5 @@ module.exports.loginPage = loginPage;
 module.exports.login = login;
 module.exports.logout = logout;
 module.exports.signup = signup;
+module.exports.changePass = changePass;
 module.exports.getToken = getToken;

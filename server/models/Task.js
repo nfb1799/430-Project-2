@@ -49,7 +49,7 @@ TaskSchema.statics.findByOwner = (ownerId, callback) => {
   const search = {
     owner: convertId(ownerId),
   };
-  
+
   return TaskModel.find(search).select('name date description').lean().exec(callback);
 };
 

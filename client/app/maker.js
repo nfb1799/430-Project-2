@@ -16,6 +16,21 @@ const handleTask = (e) => {
     return false;
 };
 
+const handleChangePass = (e) => {
+    e.preventDefault();
+
+    $("#taskMessage").animate({width:'hide'},350);
+
+    if($("#username").val() == '' || $("#currPass").val() == '' || $("#newPass") == '' || $("#newPass2") == '') {
+        handleError("Error: All fields are required!");
+        return false;
+    }
+
+    sendAjax('POST', $("#changePassForm").attr("action"), $("#changePassForm").serialize(), redirect);
+
+    return false;
+};
+
 const TaskForm = (props) => {
     return(
         <form id="taskForm"
@@ -65,6 +80,29 @@ const TaskList = (props) => {
     );
 };
 
+const ChangePassForm = (props) => {
+    return(
+        <form id="changePassForm"
+            onSubmit={handleChangePass}
+            name="changePassForm"
+            action="/changePass"
+            method="POST"
+            className="taskForm"
+        >
+            <label htmlFor="username">Username: </label>
+            <input id="username" type="text" name="username" placeholder="Username" />
+            <label htmlFor="currPassword">Current Password: </label>
+            <input id="currPass" type="password" name="currPass" placeholder="Current Pass" />
+            <label htmlFor="newPassword">New Password: </label>
+            <input id="newPass" type="password" name="newPass" placeholder="New Password" />
+            <label htmlFor="newPassword2">Retype Password: </label>
+            <input id="newPass2" type="password" name="newPass2" placeholder="New Password" />
+            <input type="hidden" name="_csrf" value={props.csrf} />
+            <input className="changePassSubmit" type="submit" value="Update" />
+        </form>
+    );
+};
+
 const loadTasksFromServer = () => {
     sendAjax('GET', '/getTasks', null, (data) => {
         ReactDOM.render(
@@ -74,7 +112,22 @@ const loadTasksFromServer = () => {
     });
 };
 
+const createChangePassForm = (csrf) => {
+    ReactDOM.render(
+        <ChangePassForm csrf={csrf} />,
+        document.querySelector("#changePassWrapper")
+    );
+};
+
 const setup = (csrf) => {
+    const changePassButton = document.querySelector("#changePassButton");
+
+    changePassButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        createChangePassForm(csrf);
+        return false;
+    })
+
     ReactDOM.render(
         <TaskForm csrf={csrf} />,
         document.querySelector("#makeTask")

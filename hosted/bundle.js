@@ -18,6 +18,21 @@ var handleTask = function handleTask(e) {
   return false;
 };
 
+var handleChangePass = function handleChangePass(e) {
+  e.preventDefault();
+  $("#taskMessage").animate({
+    width: 'hide'
+  }, 350);
+
+  if ($("#username").val() == '' || $("#currPass").val() == '' || $("#newPass") == '' || $("#newPass2") == '') {
+    handleError("Error: All fields are required!");
+    return false;
+  }
+
+  sendAjax('POST', $("#changePassForm").attr("action"), $("#changePassForm").serialize(), redirect);
+  return false;
+};
+
 var TaskForm = function TaskForm(props) {
   return /*#__PURE__*/React.createElement("form", {
     id: "taskForm",
@@ -84,6 +99,53 @@ var TaskList = function TaskList(props) {
   }, taskNodes);
 };
 
+var ChangePassForm = function ChangePassForm(props) {
+  return /*#__PURE__*/React.createElement("form", {
+    id: "changePassForm",
+    onSubmit: handleChangePass,
+    name: "changePassForm",
+    action: "/changePass",
+    method: "POST",
+    className: "taskForm"
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "username"
+  }, "Username: "), /*#__PURE__*/React.createElement("input", {
+    id: "username",
+    type: "text",
+    name: "username",
+    placeholder: "Username"
+  }), /*#__PURE__*/React.createElement("label", {
+    htmlFor: "currPassword"
+  }, "Current Password: "), /*#__PURE__*/React.createElement("input", {
+    id: "currPass",
+    type: "password",
+    name: "currPass",
+    placeholder: "Current Pass"
+  }), /*#__PURE__*/React.createElement("label", {
+    htmlFor: "newPassword"
+  }, "New Password: "), /*#__PURE__*/React.createElement("input", {
+    id: "newPass",
+    type: "password",
+    name: "newPass",
+    placeholder: "New Password"
+  }), /*#__PURE__*/React.createElement("label", {
+    htmlFor: "newPassword2"
+  }, "Retype Password: "), /*#__PURE__*/React.createElement("input", {
+    id: "newPass2",
+    type: "password",
+    name: "newPass2",
+    placeholder: "New Password"
+  }), /*#__PURE__*/React.createElement("input", {
+    type: "hidden",
+    name: "_csrf",
+    value: props.csrf
+  }), /*#__PURE__*/React.createElement("input", {
+    className: "changePassSubmit",
+    type: "submit",
+    value: "Update"
+  }));
+};
+
 var loadTasksFromServer = function loadTasksFromServer() {
   sendAjax('GET', '/getTasks', null, function (data) {
     ReactDOM.render( /*#__PURE__*/React.createElement(TaskList, {
@@ -92,7 +154,19 @@ var loadTasksFromServer = function loadTasksFromServer() {
   });
 };
 
+var createChangePassForm = function createChangePassForm(csrf) {
+  ReactDOM.render( /*#__PURE__*/React.createElement(ChangePassForm, {
+    csrf: csrf
+  }), document.querySelector("#changePassWrapper"));
+};
+
 var setup = function setup(csrf) {
+  var changePassButton = document.querySelector("#changePassButton");
+  changePassButton.addEventListener("click", function (e) {
+    e.preventDefault();
+    createChangePassForm(csrf);
+    return false;
+  });
   ReactDOM.render( /*#__PURE__*/React.createElement(TaskForm, {
     csrf: csrf
   }), document.querySelector("#makeTask"));
