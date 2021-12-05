@@ -10,7 +10,6 @@ const handleTask = (e) => {
 
     sendAjax('POST', $("#taskForm").attr("action"), $("#taskForm").serialize(), () => {
         loadTasksFromServer();
-        console.log($("#taskForm").attr("action"));
     });
 
     return false;
@@ -61,8 +60,6 @@ const TaskList = (props) => {
         );
     }
 
-    console.log(props);
-
     const taskNodes = props.tasks.map((task) => {
         return (
             <div key={task._id} className="task">
@@ -77,6 +74,18 @@ const TaskList = (props) => {
         <div className="taskList">
             {taskNodes}
         </div>
+    );
+};
+
+const WelcomeMessage = (props) => {
+    if(!props.username) {
+        return (
+            <h3>Please Login to Continue</h3>
+        );
+    }
+
+    return (
+        <h3>Welcome {props.username}!</h3>
     );
 };
 
@@ -103,11 +112,11 @@ const ChangePassForm = (props) => {
     );
 };
 
-const loadTasksFromServer = () => {
-    sendAjax('GET', '/getTasks', null, (data) => {
+const createWelcomeMessage = () => {
+    sendAjax('GET', '/getUser', null, (data) => {
         ReactDOM.render(
-            <TaskList tasks={data.tasks} />,
-            document.querySelector("#tasks")
+            <WelcomeMessage username={data.username} />,
+            document.querySelector("#welcomeMessage")
         );
     });
 };
@@ -117,6 +126,15 @@ const createChangePassForm = (csrf) => {
         <ChangePassForm csrf={csrf} />,
         document.querySelector("#makeTask")
     );
+};
+
+const loadTasksFromServer = () => {
+    sendAjax('GET', '/getTasks', null, (data) => {
+        ReactDOM.render(
+            <TaskList tasks={data.tasks} />,
+            document.querySelector("#tasks")
+        );
+    });
 };
 
 const setup = (csrf) => {
@@ -138,6 +156,7 @@ const setup = (csrf) => {
         document.querySelector("#tasks")
     );
 
+    createWelcomeMessage();
     loadTasksFromServer();
 };
 

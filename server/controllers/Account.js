@@ -79,12 +79,17 @@ const signup = (request, response) => {
   });
 };
 
+const getUser = (request, response) => {
+  const req = request;
+  const res = response;
+  return res.json({ username: req.session.account.username });
+};
+
 // Updates the users password and handles any errors
 const changePass = (request, response) => {
   const req = request;
   const res = response;
-
-  console.log(req.body);
+  
   // cast to strings to cover up some security flaws
   const username = `${req.body.username}`;
   const currPass = `${req.body.currPass}`;
@@ -151,5 +156,6 @@ module.exports.loginPage = loginPage;
 module.exports.login = login;
 module.exports.logout = logout;
 module.exports.signup = signup;
+module.exports.getUser = getUser;
 module.exports.changePass = changePass;
 module.exports.getToken = getToken;

@@ -26,6 +26,18 @@ nav {
   border-bottom: 2px solid black;
 }
 
+#welcomeMessage {
+  float: left;
+  padding: 5px;
+  padding-top: 12px;
+  padding-left: 20px;
+}
+#welcomeMessage h3 {
+  color: white;
+  margin: 0;
+  font-size: 1.5em;
+}
+
 .navlink {
   padding: 5px;
   padding-top: 12px;

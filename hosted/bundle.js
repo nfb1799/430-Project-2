@@ -99,6 +99,14 @@ var TaskList = function TaskList(props) {
   }, taskNodes);
 };
 
+var WelcomeMessage = function WelcomeMessage(props) {
+  if (!props.username) {
+    return /*#__PURE__*/React.createElement("h3", null, "Please Login to Continue");
+  }
+
+  return /*#__PURE__*/React.createElement("h3", null, "Welcome ", props.username, "!");
+};
+
 var ChangePassForm = function ChangePassForm(props) {
   return /*#__PURE__*/React.createElement("form", {
     id: "changePassForm",
@@ -146,11 +154,11 @@ var ChangePassForm = function ChangePassForm(props) {
   }));
 };
 
-var loadTasksFromServer = function loadTasksFromServer() {
-  sendAjax('GET', '/getTasks', null, function (data) {
-    ReactDOM.render( /*#__PURE__*/React.createElement(TaskList, {
-      tasks: data.tasks
-    }), document.querySelector("#tasks"));
+var createWelcomeMessage = function createWelcomeMessage() {
+  sendAjax('GET', '/getUser', null, function (data) {
+    ReactDOM.render( /*#__PURE__*/React.createElement(WelcomeMessage, {
+      username: data.username
+    }), document.querySelector("#welcomeMessage"));
   });
 };
 
@@ -158,6 +166,14 @@ var createChangePassForm = function createChangePassForm(csrf) {
   ReactDOM.render( /*#__PURE__*/React.createElement(ChangePassForm, {
     csrf: csrf
   }), document.querySelector("#makeTask"));
+};
+
+var loadTasksFromServer = function loadTasksFromServer() {
+  sendAjax('GET', '/getTasks', null, function (data) {
+    ReactDOM.render( /*#__PURE__*/React.createElement(TaskList, {
+      tasks: data.tasks
+    }), document.querySelector("#tasks"));
+  });
 };
 
 var setup = function setup(csrf) {
@@ -173,6 +189,7 @@ var setup = function setup(csrf) {
   ReactDOM.render( /*#__PURE__*/React.createElement(TaskList, {
     tasks: []
   }), document.querySelector("#tasks"));
+  createWelcomeMessage();
   loadTasksFromServer();
 };
 
