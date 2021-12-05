@@ -157,7 +157,7 @@ var loadTasksFromServer = function loadTasksFromServer() {
 var createChangePassForm = function createChangePassForm(csrf) {
   ReactDOM.render( /*#__PURE__*/React.createElement(ChangePassForm, {
     csrf: csrf
-  }), document.querySelector("#changePassWrapper"));
+  }), document.querySelector("#makeTask"));
 };
 
 var setup = function setup(csrf) {

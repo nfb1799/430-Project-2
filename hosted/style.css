@@ -51,13 +51,15 @@ nav {
 
 #loginWrapper {
   display: grid;
-  grid-template-areas: "ad1 content ad2";
+  grid-template-areas: "ad1 calendar ad2" "ad1 content ad2";
+  padding-top: 100px;
 }
 #loginWrapper #ad1 {
   grid-area: ad1;
   width: 192px;
   height: 512px;
   margin: auto;
+  grid-row: span 2;
 }
 #loginWrapper #ad2 {
   grid-area: ad2;
@@ -65,8 +67,36 @@ nav {
   height: 512px;
   margin: auto;
 }
+#loginWrapper #calendar {
+  grid-area: calendar;
+  margin: auto;
+}
 #loginWrapper #content {
   grid-area: content;
+  padding-top: 80px;
+}
+
+#appWrapper {
+  display: grid;
+  grid-template-areas: "ad1 makeTask ad2" "ad1 tasks ad2";
+}
+#appWrapper #ad1 {
+  grid-area: ad1;
+  width: 192px;
+  height: 512px;
+  margin: auto;
+}
+#appWrapper #ad2 {
+  grid-area: ad2;
+  width: 192px;
+  height: 512px;
+  margin: auto;
+}
+#appWrapper #makeTask {
+  grid-area: makeTask;
+}
+#appWrapper #tasks {
+  grid-area: tasks;
 }
 
 .taskForm {
@@ -74,7 +104,7 @@ nav {
   border: 2px solid black;
   display: grid;
   grid-template-areas: "label input" "label input" "label input" "blank submit";
-  width: 20%;
+  width: 80%;
   margin: auto;
   margin-top: 10px;
   padding: 10px;
@@ -90,7 +120,31 @@ nav {
   color: white;
 }
 
-.makeTaskSubmit {
+#loginForm > *, #signupForm > * {
+  margin-top: 8px;
+}
+
+#changePassForm {
+  background-color: grey;
+  border: 2px solid black;
+  display: grid;
+  grid-template-areas: "label input" "label input" "label input" "label input" "blank submit";
+  width: 80%;
+  margin: auto;
+  margin-top: 10px;
+  padding: 10px;
+  row-gap: 4px;
+}
+#changePassForm label {
+  display: inline-block;
+  width: 150px;
+  margin-left: 10px;
+  font-size: 1.2em;
+  float: left;
+  color: white;
+}
+
+.makeTaskSubmit, .changePassSubmit {
   grid-area: submit;
   justify-self: end;
   transition: background-color 0.4s ease;
@@ -104,18 +158,16 @@ nav {
   color: white;
 }
 
-.makeTaskSubmit:hover {
+.makeTaskSubmit:hover, .changePassSubmit:hover {
   transition: background-color 0.4s ease, color 0.4s ease;
   background-color: white;
   color: black;
 }
 
 .mainForm {
-  height: 300px;
-  width: 350px;
   margin: 0 auto;
-  padding-top: 350px;
   font-size: 1.2em;
+  width: 300px;
 }
 
 .mainForm h3 {
@@ -236,6 +288,7 @@ nav {
   overflow: hidden;
   display: grid;
   grid-template-rows: auto auto auto;
+  opacity: 95%;
 }
 
 .task:hover {

@@ -115,7 +115,7 @@ const loadTasksFromServer = () => {
 const createChangePassForm = (csrf) => {
     ReactDOM.render(
         <ChangePassForm csrf={csrf} />,
-        document.querySelector("#changePassWrapper")
+        document.querySelector("#makeTask")
     );
 };
 
