@@ -53,6 +53,27 @@ nav {
     transition: background-color 0.4s ease, color 0.4s ease;
 }
 
+#loginWrapper {
+    display: grid;
+    grid-template-areas: "ad1 content ad2";
+
+    #ad1 {
+        grid-area: ad1;
+        width: 192px;
+        height: 512px;
+        margin: auto;
+    }
+    #ad2 {
+        grid-area: ad2;
+        width: 192px;
+        height: 512px;
+        margin: auto;
+    }
+    #content {
+        grid-area: content;
+    }
+}
+
 .taskForm {
     background-color: $backGroundColor;
     border: 2px solid black;
