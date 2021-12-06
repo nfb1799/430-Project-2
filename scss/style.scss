@@ -299,7 +299,7 @@ nav {
 }
 
 .task {
-    width: 30%;
+    width: 300px;
     margin: 0 auto;
     margin-top: 2px;
     margin-bottom: 2px;
@@ -310,8 +310,38 @@ nav {
     min-height:60px;
     overflow: hidden;
     display: grid;
+    grid-template-areas: 
+        "date button"
+        "task task"
+        "desc desc";
     grid-template-rows: auto auto auto;
+    grid-template-columns: auto auto;
     opacity: 95%;
+
+    .taskDate {
+        grid-area: date;
+    }
+    .taskName {
+        grid-area: task;
+    }
+    .taskDescription {
+        grid-area: desc;
+    }
+    #close {
+        grid-area: button;
+        width: 16px;
+        height: 16px;
+        background-color: black;
+        color: white;
+        justify-self: end;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    #close:hover {
+        background-color: $backGroundHighlightColor;
+        color: $backGroundColor;
+    }
 }
 
 .task:hover {

@@ -91,9 +91,9 @@ const changeUsername = (request, response) => {
 
   const newUsername = `${req.body.newUsername}`;
 
-  if(!newUsername) {
+  if (!newUsername) {
     return res.status(400).json({ error: 'Username is required!' });
-  } 
+  }
 
   return Account.AccountModel.findByUsername(req.session.account.username, (error, doc) => {
     if (error) {
@@ -103,7 +103,7 @@ const changeUsername = (request, response) => {
     if (!doc) {
       return res.status(400).json({ error: 'Account not found!' });
     }
-    
+
     const currAccount = doc;
     currAccount.username = newUsername;
 
@@ -125,8 +125,8 @@ const changeUsername = (request, response) => {
     });
 
     return false;
-  }); //findByUsername
-}; //changeUsername
+  }); // findByUsername
+}; // changeUsername
 
 // Updates the users password and handles any errors
 const changePass = (request, response) => {

@@ -117,17 +117,20 @@ var TaskList = function TaskList(props) {
   var taskNodes = props.tasks.map(function (task) {
     return /*#__PURE__*/React.createElement("div", {
       key: task._id,
-      className: "task",
-      onClick: function onClick(e) {
-        deleteTask(e, task.name, task.description, props.csrf);
-      }
+      className: "task"
     }, /*#__PURE__*/React.createElement("h3", {
       className: "taskDate"
     }, "Date: ", task.date), /*#__PURE__*/React.createElement("h3", {
       className: "taskName"
     }, "Task: ", task.name), /*#__PURE__*/React.createElement("h3", {
       className: "taskDescription"
-    }, "Description: ", task.description));
+    }, "Description: ", task.description), /*#__PURE__*/React.createElement("button", {
+      type: "button",
+      id: "close",
+      onClick: function onClick(e) {
+        deleteTask(e, task.name, task.description, props.csrf);
+      }
+    }, "x"));
   });
   return /*#__PURE__*/React.createElement("div", {
     className: "taskList"
@@ -139,7 +142,7 @@ var WelcomeMessage = function WelcomeMessage(props) {
     return /*#__PURE__*/React.createElement("h3", null, "Please Login to Continue");
   }
 
-  return /*#__PURE__*/React.createElement("h3", null, "Welcome ", props.username, "!");
+  return /*#__PURE__*/React.createElement("h3", null, "Welcome ", /*#__PURE__*/React.createElement("i", null, props.username), "!");
 };
 
 var ChangeUsernameForm = function ChangeUsernameForm(props) {

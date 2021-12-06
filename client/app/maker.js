@@ -97,10 +97,13 @@ const TaskList = (props) => {
 
     const taskNodes = props.tasks.map((task) => {
         return (
-            <div key={task._id} className="task" onClick={(e) => { deleteTask(e, task.name, task.description, props.csrf) }}>
+            <div key={task._id} className="task">
                 <h3 className="taskDate">Date: {task.date}</h3>
                 <h3 className="taskName">Task: {task.name}</h3>
                 <h3 className="taskDescription">Description: {task.description}</h3>
+                <button type="button" id="close" onClick={(e) => { deleteTask(e, task.name, task.description, props.csrf) }}>
+                    x
+                </button>
             </div>
         );
     });
@@ -120,7 +123,7 @@ const WelcomeMessage = (props) => {
     }
 
     return (
-        <h3>Welcome {props.username}!</h3>
+        <h3>Welcome <i>{props.username}</i>!</h3>
     );
 };
 
