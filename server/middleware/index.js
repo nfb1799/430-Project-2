@@ -1,3 +1,4 @@
+// Redirects to / if not logged in
 const requiresLogin = (req, res, next) => {
   if (!req.session.account) {
     return res.redirect('/');
@@ -5,6 +6,7 @@ const requiresLogin = (req, res, next) => {
   return next();
 };
 
+// Redirect to /maker if not logged out
 const requiresLogout = (req, res, next) => {
   if (req.session.account) {
     return res.redirect('/maker');
@@ -13,6 +15,7 @@ const requiresLogout = (req, res, next) => {
   return next();
 };
 
+// Redirect if not secure
 const requiresSecure = (req, res, next) => {
   if (req.headers['x-forwarded-proto'] !== 'https') {
     return res.redirect(`https://${req.hostname}${req.url}`);
@@ -21,6 +24,7 @@ const requiresSecure = (req, res, next) => {
   return next();
 };
 
+// Bypass security check
 const bypassSecure = (req, res, next) => {
   next();
 };

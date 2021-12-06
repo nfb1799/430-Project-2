@@ -2,7 +2,7 @@ const models = require('../models');
 
 const { Task } = models;
 
-// maybe rename maker page
+// Renders app.handlebars
 const makerPage = (req, res) => {
   Task.TaskModel.findByOwner(req.session.account._id, (err, docs) => {
     if (err) {
@@ -14,7 +14,9 @@ const makerPage = (req, res) => {
   });
 };
 
+// Adds a new task to the database
 const makeTask = (req, res) => {
+  // Checks to see that all fields were entered
   if (!req.body.name || !req.body.date || !req.body.description) {
     return res.status(400).json({ error: 'Error: All fields are required' });
   }
@@ -26,10 +28,12 @@ const makeTask = (req, res) => {
     owner: req.session.account._id,
   };
 
+  // Loads task data into the model
   const newTask = new Task.TaskModel(taskData);
 
   const taskPromise = newTask.save();
 
+  // Redirect to /maker when complete
   taskPromise.then(() => res.json({ redirect: '/maker' }));
 
   taskPromise.catch((err) => {
@@ -44,6 +48,7 @@ const makeTask = (req, res) => {
   return taskPromise;
 };
 
+// Returns all tasks for the active user
 const getTasks = (request, response) => {
   const req = request;
   const res = response;
@@ -58,11 +63,10 @@ const getTasks = (request, response) => {
   });
 };
 
+// Deletes a specific task based on name and description
 const deleteTask = (request, response) => {
   const req = request;
   const res = response;
-  console.log('indeletetask');
-  console.log(req.body);
 
   return Task.TaskModel.deleteTask(req.session.account._id, req.body.name, req.body.description,
     (err, docs) => {

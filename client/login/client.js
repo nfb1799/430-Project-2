@@ -1,33 +1,40 @@
+//Validates login and redirects to /maker
 const handleLogin = (e) => {
     e.preventDefault();
 
     $("#loginMessage").animate({width:'hide'},350);
 
+    //Checks to see that both fields were entered
     if($("#user").val() == '' || $("#pass").val() == '') {
         handleError("Error: Username or password is empty!");
         return false;
     }
 
+    //Sends request to attempt to login
     sendAjax('POST', $("#loginForm").attr("action"), $("#loginForm").serialize(), redirect);
 
     return false;
 };
 
+//Validates signup and redirects to /maker
 const handleSignup = (e) => {
     e.preventDefault();
 
     $("#loginMessage").animate({width:'hide'},350);
 
+    //Checks to see that all fields were entered 
     if($("#user").val() == '' || $("#pass").val() == '' || $("#pass2").val() == '') {
         handleError("Error: All fields are required!");
         return false;
     }
 
+    //Sends request to the server and attempts to signup
     sendAjax('POST', $("#signupForm").attr("action"), $("#signupForm").serialize(), redirect);
 
     return false;
 };
 
+//Form for logging in
 const LoginWindow = (props) => {
     return (
         <form id="loginForm" 
@@ -47,6 +54,7 @@ const LoginWindow = (props) => {
     );
 };
 
+//Form for signing up
 const SignupWindow = (props) => {
     return (
         <form id="signupForm" 
@@ -68,6 +76,7 @@ const SignupWindow = (props) => {
     );
 };
 
+//Renders the login form
 const createLoginWindow = (csrf) => {
     ReactDOM.render(
         <LoginWindow csrf={csrf} />,
@@ -75,6 +84,7 @@ const createLoginWindow = (csrf) => {
     );
 };
 
+//Renders the signup form
 const createSignupWindow = (csrf) => {
     ReactDOM.render(
         <SignupWindow csrf={csrf} />,
@@ -82,31 +92,42 @@ const createSignupWindow = (csrf) => {
     );
 };
 
+//Initial setup
 const setup = (csrf) => {
+    
+    //Initializing button controls
     const loginButton = document.querySelector("#loginButton");
     const signupButton = document.querySelector("#signupButton");
 
+    //On click
+    //Loads the signup form
     signupButton.addEventListener("click", (e) => {
         e.preventDefault();
         createSignupWindow(csrf);
         return false;
     });
 
+    //On click
+    //Loads the login form
     loginButton.addEventListener("click", (e) => {
         e.preventDefault();
         createLoginWindow(csrf);
         return false;
     });
 
-    createLoginWindow(csrf); //default view
+    //Default: loads the login form
+    createLoginWindow(csrf); 
 };
 
+//Sends request to the server to obtain csrfToken
+//Calls setup() with the csrfToken
 const getToken = () => {
     sendAjax('GET', '/getToken', null, (result) => {
         setup(result.csrfToken);
     });
 };
 
+//onload
 $(document).ready(function() {
     getToken();
 });

@@ -2,15 +2,18 @@ const models = require('../models');
 
 const { Account } = models;
 
+// Renders login.handlebars
 const loginPage = (req, res) => {
   res.render('login', { csrfToken: req.csrfToken() });
 };
 
+// Destroys the session and redirects to the main page
 const logout = (req, res) => {
   req.session.destroy();
   res.redirect('/');
 };
 
+// Authenticates login requests and handles errors
 const login = (request, response) => {
   const req = request;
   const res = response;
@@ -19,10 +22,12 @@ const login = (request, response) => {
   const username = `${req.body.username}`;
   const password = `${req.body.pass}`;
 
+  // Checks to see both fields were entered
   if (!username || !password) {
     return res.status(400).json({ error: 'Error: All fields are required' });
   }
 
+  // Authenticates login and redirects to /maker
   return Account.AccountModel.authenticate(username, password, (err, account) => {
     if (err || !account) {
       return res.status(401).json({ error: 'Wrong username or password' });
@@ -34,6 +39,7 @@ const login = (request, response) => {
   });
 };
 
+// Authenticates signup requests and saves the new account using a salt and hash
 const signup = (request, response) => {
   const req = request;
   const res = response;
@@ -43,14 +49,17 @@ const signup = (request, response) => {
   req.body.pass = `${req.body.pass}`;
   req.body.pass2 = `${req.body.pass2}`;
 
+  // Checks to see that all fields were entered
   if (!req.body.username || !req.body.pass || !req.body.pass2) {
     return res.status(400).json({ error: 'Error: All fields are required' });
   }
 
+  // Checks to see that passwords match
   if (req.body.pass !== req.body.pass2) {
     return res.status(400).json({ error: 'Error: Passwords do not match' });
   }
 
+  // Generates password hash and loads account data into the database
   return Account.AccountModel.generateHash(req.body.pass, (salt, hash) => {
     const accountData = {
       username: req.body.username,
@@ -79,22 +88,27 @@ const signup = (request, response) => {
   });
 };
 
+// Returns the current username
 const getUser = (request, response) => {
   const req = request;
   const res = response;
   return res.json({ username: req.session.account.username });
 };
 
+// Authenticates username changes and handles errors
 const changeUsername = (request, response) => {
   const req = request;
   const res = response;
 
+  // Cast to string
   const newUsername = `${req.body.newUsername}`;
 
+  // Checks to see that a username was entered
   if (!newUsername) {
     return res.status(400).json({ error: 'Username is required!' });
   }
 
+  // Finds the current account from the database and updates the username
   return Account.AccountModel.findByUsername(req.session.account.username, (error, doc) => {
     if (error) {
       return res.status(400).json({ error: 'An unexpected error occurred.' });
@@ -184,6 +198,7 @@ const changePass = (request, response) => {
   }); // authenticate()
 }; // changePass()
 
+// Returns JSON of the csrfToken
 const getToken = (request, response) => {
   const req = request;
   const res = response;

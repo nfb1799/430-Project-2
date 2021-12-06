@@ -1,68 +1,81 @@
 "use strict";
 
+//Validates task form and loads tasks from server
 var handleTask = function handleTask(e) {
   e.preventDefault();
   $("#taskMessage").animate({
     width: 'hide'
-  }, 350);
+  }, 350); //Validates all fields were entered
 
   if ($("#taskName").val() == '' || $("taskDate").val() == '' || $("#taskDescription").val() == '') {
     handleError("Error: All fields are required!");
     return false;
-  }
+  } //Adds the task to the list and loads them all in
 
-  console.log($("#taskForm").serialize());
+
   sendAjax('POST', $("#taskForm").attr("action"), $("#taskForm").serialize(), function () {
     document.querySelector("#status").innerHTML = "<h3>Task added!</h3>";
     loadTasksFromServer($("#csrf").val());
   });
   return false;
-};
+}; //Validates and updates the current username
+
 
 var handleChangeUsername = function handleChangeUsername(e) {
   e.preventDefault();
   $("#taskMessage").animate({
     width: 'hide'
-  }, 350);
+  }, 350); //Checks to see that a username was entered
 
   if ($("#newUsername").val() == '') {
     handleError("Error: Username is required!");
     return false;
-  }
+  } //Sends request to /changeUsername
+  //Reloads the task form and welcome message
+
 
   sendAjax('POST', $("#changeUsernameForm").attr("action"), $("#changeUsernameForm").serialize(), function () {
     document.querySelector("#status").innerHTML = "<h3>Username updated!</h3>";
     createTaskForm($("#csrf"));
     createWelcomeMessage();
   });
-};
+}; //Validates password changes and sends POST request to the server
+
 
 var handleChangePass = function handleChangePass(e) {
   e.preventDefault();
   $("#taskMessage").animate({
     width: 'hide'
-  }, 350);
+  }, 350); //Checks to see that all fields were entered
 
   if ($("#username").val() == '' || $("#currPass").val() == '' || $("#newPass").val() == '' || $("#newPass2").val() == '') {
     handleError("Error: All fields are required!");
     return false;
-  }
+  } //Sends request to /changePass and reloads the task form
+
 
   sendAjax('POST', $("#changePassForm").attr("action"), $("#changePassForm").serialize(), function () {
     document.querySelector("#status").innerHTML = "<h3>Password updated!</h3>";
     createTaskForm($("#csrf"));
   });
   return false;
-};
+}; //Sends DELETE request to the server for a specific task name and description
+
 
 var deleteTask = function deleteTask(e, name, desc, csrf) {
   e.preventDefault();
-  console.log(csrf);
   sendAjax('DELETE', '/deleteTask', "name=".concat(name, "&description=").concat(desc, "&_csrf=").concat(csrf), function () {
     loadTasksFromServer(csrf);
     document.querySelector("#status").innerHTML = '<h3>Task deleted!</h3>';
   });
 };
+/*  Task form
+    
+    Date:
+    Task:
+    Description:
+*/
+
 
 var TaskForm = function TaskForm(props) {
   return /*#__PURE__*/React.createElement("form", {
@@ -102,7 +115,8 @@ var TaskForm = function TaskForm(props) {
     type: "submit",
     value: "Make Task"
   }));
-};
+}; //Displays tasks and includes a button to delete the specific task
+
 
 var TaskList = function TaskList(props) {
   if (props.tasks.length === 0) {
@@ -113,7 +127,6 @@ var TaskList = function TaskList(props) {
     }, "No Tasks Yet"));
   }
 
-  console.log(props);
   var taskNodes = props.tasks.map(function (task) {
     return /*#__PURE__*/React.createElement("div", {
       key: task._id,
@@ -135,7 +148,8 @@ var TaskList = function TaskList(props) {
   return /*#__PURE__*/React.createElement("div", {
     className: "taskList"
   }, taskNodes);
-};
+}; //Loads a welcome message based on the active user
+
 
 var WelcomeMessage = function WelcomeMessage(props) {
   if (!props.username) {
@@ -143,7 +157,8 @@ var WelcomeMessage = function WelcomeMessage(props) {
   }
 
   return /*#__PURE__*/React.createElement("h3", null, "Welcome ", /*#__PURE__*/React.createElement("i", null, props.username), "!");
-};
+}; //Form for entering a new username
+
 
 var ChangeUsernameForm = function ChangeUsernameForm(props) {
   return /*#__PURE__*/React.createElement("form", {
@@ -171,9 +186,15 @@ var ChangeUsernameForm = function ChangeUsernameForm(props) {
     value: "Update"
   }));
 };
+/*  Change Pass Form
+
+    Current Password:
+    New Password:
+    Retype Password:
+*/
+
 
 var ChangePassForm = function ChangePassForm(props) {
-  console.log(props);
   return /*#__PURE__*/React.createElement("form", {
     id: "changePassForm",
     onSubmit: handleChangePass,
@@ -216,7 +237,8 @@ var ChangePassForm = function ChangePassForm(props) {
     type: "submit",
     value: "Update"
   }));
-};
+}; //Sends request to /getUser and renders the React component for WelcomeMessage
+
 
 var createWelcomeMessage = function createWelcomeMessage() {
   sendAjax('GET', '/getUser', null, function (data) {
@@ -224,13 +246,15 @@ var createWelcomeMessage = function createWelcomeMessage() {
       username: data.username
     }), document.querySelector("#welcomeMessage"));
   });
-};
+}; //Renders the React component for ChangeUsernameForm
+
 
 var createChangeUsernameForm = function createChangeUsernameForm(csrf) {
   ReactDOM.render( /*#__PURE__*/React.createElement(ChangeUsernameForm, {
     csrf: csrf
   }), document.querySelector("#makeTask"));
-};
+}; //Sends request to /getUsers and renders the React component for ChangePassForm
+
 
 var createChangePassForm = function createChangePassForm(csrf) {
   sendAjax('GET', '/getUser', null, function (data) {
@@ -239,7 +263,8 @@ var createChangePassForm = function createChangePassForm(csrf) {
       username: data.username
     }), document.querySelector("#makeTask"));
   });
-};
+}; //Gets a list of tasks from the server and loads the React component for TaskList
+
 
 var loadTasksFromServer = function loadTasksFromServer(csrf) {
   sendAjax('GET', '/getTasks', null, function (data) {
@@ -248,59 +273,75 @@ var loadTasksFromServer = function loadTasksFromServer(csrf) {
       csrf: csrf
     }), document.querySelector("#tasks"));
   });
-};
+}; //Renders the React component for TaskForm
+
 
 var createTaskForm = function createTaskForm(csrf) {
   ReactDOM.render( /*#__PURE__*/React.createElement(TaskForm, {
     csrf: csrf
   }), document.querySelector("#makeTask"));
-};
+}; //Initial setup
+
 
 var setup = function setup(csrf) {
+  //Initializing button controls
   var changePassButton = document.querySelector("#changePassButton");
-  var changeUsernameButton = document.querySelector("#changeUsernameButton");
+  var changeUsernameButton = document.querySelector("#changeUsernameButton"); //On click
+  //Updates status message and loads ChangePassForm
+
   changePassButton.addEventListener("click", function (e) {
     e.preventDefault();
     document.querySelector("#status").innerHTML = "<h3>Update your password</h3>";
     createChangePassForm(csrf);
-  });
+  }); //On click
+  //Updates status message and loads ChangeUsernameForm
+
   changeUsernameButton.addEventListener("click", function (e) {
     e.preventDefault();
     document.querySelector("#status").innerHTML = "<h3>Enter a New Username</h3>";
     createChangeUsernameForm(csrf);
-  });
-  createTaskForm(csrf);
+  }); //Default: Renders TaskForm
+
+  createTaskForm(csrf); //Default: Renders empty TaskList
+
   ReactDOM.render( /*#__PURE__*/React.createElement(TaskList, {
     tasks: []
-  }), document.querySelector("#tasks"));
+  }), document.querySelector("#tasks")); //Renders WelcomeMessage and loads tasks from server
+
   createWelcomeMessage();
   loadTasksFromServer(csrf);
-};
+}; //Sends request to server to obtain csrfToken
+//calls setup() with the csrfToken
+
 
 var getToken = function getToken() {
   sendAjax('GET', '/getToken', null, function (result) {
     setup(result.csrfToken);
   });
-};
+}; //onload
+
 
 $(document).ready(function () {
   getToken();
 });
 "use strict";
 
+//Handles errors by animating the message on screen
 var handleError = function handleError(message) {
   $("#errorMessage").text(message);
   $("#taskMessage").animate({
     width: 'toggle'
   }, 350);
-};
+}; //Redirects to a specified location
+
 
 var redirect = function redirect(response) {
   $("#taskMessage").animate({
     width: 'hide'
   }, 350);
   window.location = response.redirect;
-};
+}; //Sends a request to the server based on type, action, data, and a callback function
+
 
 var sendAjax = function sendAjax(type, action, data, success) {
   $.ajax({

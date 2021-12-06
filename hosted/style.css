@@ -289,6 +289,7 @@ nav {
   border: 2px solid black;
   border-radius: 4px;
   background-color: grey;
+  color: white;
   padding: 10px;
   min-height: 60px;
   overflow: hidden;

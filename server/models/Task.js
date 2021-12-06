@@ -39,12 +39,14 @@ const TaskSchema = new mongoose.Schema({
   },
 });
 
+// Translates Tasks to JSON format
 TaskSchema.statics.toAPI = (doc) => ({
   name: doc.name,
   date: doc.date,
   description: doc.description,
 });
 
+// Returns tasks for a specific user
 TaskSchema.statics.findByOwner = (ownerId, callback) => {
   const search = {
     owner: convertId(ownerId),
@@ -53,6 +55,7 @@ TaskSchema.statics.findByOwner = (ownerId, callback) => {
   return TaskModel.find(search).select('name date description').lean().exec(callback);
 };
 
+// Deletes a specific task based on owner, name, and description
 TaskSchema.statics.deleteTask = (ownerId, name, description, callback) => {
   const search = {
     owner: convertId(ownerId),
