@@ -85,6 +85,49 @@ const getUser = (request, response) => {
   return res.json({ username: req.session.account.username });
 };
 
+const changeUsername = (request, response) => {
+  const req = request;
+  const res = response;
+
+  const newUsername = `${req.body.newUsername}`;
+
+  if(!newUsername) {
+    return res.status(400).json({ error: 'Username is required!' });
+  } 
+
+  return Account.AccountModel.findByUsername(req.session.account.username, (error, doc) => {
+    if (error) {
+      return res.status(400).json({ error: 'An unexpected error occurred.' });
+    }
+
+    if (!doc) {
+      return res.status(400).json({ error: 'Account not found!' });
+    }
+    
+    const currAccount = doc;
+    currAccount.username = newUsername;
+
+    const savePromise = currAccount.save();
+
+    savePromise.then(() => {
+      req.session.account = Account.AccountModel.toAPI(currAccount);
+      return res.json({ redirect: '/maker' });
+    });
+
+    savePromise.catch((err) => {
+      console.log(err);
+
+      if (err.code === 11000) {
+        return res.status(400).json({ error: 'Username already in use' });
+      }
+
+      return res.status(400).json({ error: 'An error occurred' });
+    });
+
+    return false;
+  }); //findByUsername
+}; //changeUsername
+
 // Updates the users password and handles any errors
 const changePass = (request, response) => {
   const req = request;
@@ -157,5 +200,6 @@ module.exports.login = login;
 module.exports.logout = logout;
 module.exports.signup = signup;
 module.exports.getUser = getUser;
+module.exports.changeUsername = changeUsername;
 module.exports.changePass = changePass;
 module.exports.getToken = getToken;

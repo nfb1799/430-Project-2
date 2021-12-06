@@ -13,9 +13,28 @@ var handleTask = function handleTask(e) {
 
   console.log($("#taskForm").serialize());
   sendAjax('POST', $("#taskForm").attr("action"), $("#taskForm").serialize(), function () {
+    document.querySelector("#status").innerHTML = "<h3>Task added!</h3>";
     loadTasksFromServer($("#csrf").val());
   });
   return false;
+};
+
+var handleChangeUsername = function handleChangeUsername(e) {
+  e.preventDefault();
+  $("#taskMessage").animate({
+    width: 'hide'
+  }, 350);
+
+  if ($("#newUsername").val() == '') {
+    handleError("Error: Username is required!");
+    return false;
+  }
+
+  sendAjax('POST', $("#changeUsernameForm").attr("action"), $("#changeUsernameForm").serialize(), function () {
+    document.querySelector("#status").innerHTML = "<h3>Username updated!</h3>";
+    createTaskForm($("#csrf"));
+    createWelcomeMessage();
+  });
 };
 
 var handleChangePass = function handleChangePass(e) {
@@ -24,12 +43,15 @@ var handleChangePass = function handleChangePass(e) {
     width: 'hide'
   }, 350);
 
-  if ($("#username").val() == '' || $("#currPass").val() == '' || $("#newPass") == '' || $("#newPass2") == '') {
+  if ($("#username").val() == '' || $("#currPass").val() == '' || $("#newPass").val() == '' || $("#newPass2").val() == '') {
     handleError("Error: All fields are required!");
     return false;
   }
 
-  sendAjax('POST', $("#changePassForm").attr("action"), $("#changePassForm").serialize(), redirect);
+  sendAjax('POST', $("#changePassForm").attr("action"), $("#changePassForm").serialize(), function () {
+    document.querySelector("#status").innerHTML = "<h3>Password updated!</h3>";
+    createTaskForm($("#csrf"));
+  });
   return false;
 };
 
@@ -38,6 +60,7 @@ var deleteTask = function deleteTask(e, name, desc, csrf) {
   console.log(csrf);
   sendAjax('DELETE', '/deleteTask', "name=".concat(name, "&description=").concat(desc, "&_csrf=").concat(csrf), function () {
     loadTasksFromServer(csrf);
+    document.querySelector("#status").innerHTML = '<h3>Task deleted!</h3>';
   });
 };
 
@@ -119,6 +142,33 @@ var WelcomeMessage = function WelcomeMessage(props) {
   return /*#__PURE__*/React.createElement("h3", null, "Welcome ", props.username, "!");
 };
 
+var ChangeUsernameForm = function ChangeUsernameForm(props) {
+  return /*#__PURE__*/React.createElement("form", {
+    id: "changeUsernameForm",
+    onSubmit: handleChangeUsername,
+    name: "changeUsernameForm",
+    action: "/changeUsername",
+    method: "POST",
+    className: "taskForm"
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "newUsername"
+  }, "New Username: "), /*#__PURE__*/React.createElement("input", {
+    id: "newUsername",
+    type: "text",
+    name: "newUsername",
+    placeholder: "New Username"
+  }), /*#__PURE__*/React.createElement("input", {
+    id: "csrf",
+    type: "hidden",
+    name: "_csrf",
+    value: props.csrf
+  }), /*#__PURE__*/React.createElement("input", {
+    className: "changePassSubmit",
+    type: "submit",
+    value: "Update"
+  }));
+};
+
 var ChangePassForm = function ChangePassForm(props) {
   console.log(props);
   return /*#__PURE__*/React.createElement("form", {
@@ -154,6 +204,7 @@ var ChangePassForm = function ChangePassForm(props) {
     name: "username",
     value: props.username
   }), /*#__PURE__*/React.createElement("input", {
+    id: "csrf",
     type: "hidden",
     name: "_csrf",
     value: props.csrf
@@ -170,6 +221,12 @@ var createWelcomeMessage = function createWelcomeMessage() {
       username: data.username
     }), document.querySelector("#welcomeMessage"));
   });
+};
+
+var createChangeUsernameForm = function createChangeUsernameForm(csrf) {
+  ReactDOM.render( /*#__PURE__*/React.createElement(ChangeUsernameForm, {
+    csrf: csrf
+  }), document.querySelector("#makeTask"));
 };
 
 var createChangePassForm = function createChangePassForm(csrf) {
@@ -190,16 +247,26 @@ var loadTasksFromServer = function loadTasksFromServer(csrf) {
   });
 };
 
-var setup = function setup(csrf) {
-  var changePassButton = document.querySelector("#changePassButton");
-  changePassButton.addEventListener("click", function (e) {
-    e.preventDefault();
-    createChangePassForm(csrf);
-    return false;
-  });
+var createTaskForm = function createTaskForm(csrf) {
   ReactDOM.render( /*#__PURE__*/React.createElement(TaskForm, {
     csrf: csrf
   }), document.querySelector("#makeTask"));
+};
+
+var setup = function setup(csrf) {
+  var changePassButton = document.querySelector("#changePassButton");
+  var changeUsernameButton = document.querySelector("#changeUsernameButton");
+  changePassButton.addEventListener("click", function (e) {
+    e.preventDefault();
+    document.querySelector("#status").innerHTML = "<h3>Update your password</h3>";
+    createChangePassForm(csrf);
+  });
+  changeUsernameButton.addEventListener("click", function (e) {
+    e.preventDefault();
+    document.querySelector("#status").innerHTML = "<h3>Enter a New Username</h3>";
+    createChangeUsernameForm(csrf);
+  });
+  createTaskForm(csrf);
   ReactDOM.render( /*#__PURE__*/React.createElement(TaskList, {
     tasks: []
   }), document.querySelector("#tasks"));

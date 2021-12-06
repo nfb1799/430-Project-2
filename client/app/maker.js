@@ -10,10 +10,28 @@ const handleTask = (e) => {
 
     console.log($("#taskForm").serialize());
     sendAjax('POST', $("#taskForm").attr("action"), $("#taskForm").serialize(), () => {
+        document.querySelector("#status").innerHTML = "<h3>Task added!</h3>";
         loadTasksFromServer($("#csrf").val());
     });
 
     return false;
+};
+
+const handleChangeUsername = (e) => {
+    e.preventDefault();
+
+    $("#taskMessage").animate({width:'hide'},350);
+
+    if($("#newUsername").val() == '') {
+        handleError("Error: Username is required!");
+        return false;
+    }
+
+    sendAjax('POST', $("#changeUsernameForm").attr("action"), $("#changeUsernameForm").serialize(), () => {
+        document.querySelector("#status").innerHTML = "<h3>Username updated!</h3>";
+        createTaskForm($("#csrf"));
+        createWelcomeMessage();
+    })
 };
 
 const handleChangePass = (e) => {
@@ -21,12 +39,16 @@ const handleChangePass = (e) => {
 
     $("#taskMessage").animate({width:'hide'},350);
 
-    if($("#username").val() == '' || $("#currPass").val() == '' || $("#newPass") == '' || $("#newPass2") == '') {
-        handleError("Error: All fields are required!");
-        return false;
+    if($("#username").val() == '' || $("#currPass").val() == '' 
+        || $("#newPass").val() == '' || $("#newPass2").val() == '') {
+            handleError("Error: All fields are required!");
+            return false;
     }
 
-    sendAjax('POST', $("#changePassForm").attr("action"), $("#changePassForm").serialize(), redirect);
+    sendAjax('POST', $("#changePassForm").attr("action"), $("#changePassForm").serialize(), () => {
+        document.querySelector("#status").innerHTML = "<h3>Password updated!</h3>";
+        createTaskForm($("#csrf"));
+    });
 
     return false;
 };
@@ -37,6 +59,7 @@ const deleteTask = (e, name, desc, csrf) => {
     console.log(csrf);
     sendAjax('DELETE', '/deleteTask', `name=${name}&description=${desc}&_csrf=${csrf}`, () => {
         loadTasksFromServer(csrf);
+        document.querySelector("#status").innerHTML = '<h3>Task deleted!</h3>';
     });
 };
 
@@ -101,6 +124,23 @@ const WelcomeMessage = (props) => {
     );
 };
 
+const ChangeUsernameForm = (props) => {
+    return(
+        <form id="changeUsernameForm"
+            onSubmit={handleChangeUsername}
+            name="changeUsernameForm"
+            action="/changeUsername"
+            method="POST"
+            className="taskForm"
+        >
+            <label htmlFor="newUsername">New Username: </label>
+            <input id="newUsername" type="text" name="newUsername" placeholder="New Username" />
+            <input id="csrf" type="hidden" name="_csrf" value={props.csrf} />
+            <input className="changePassSubmit" type="submit" value="Update" />
+        </form>
+    );
+};
+
 const ChangePassForm = (props) => {
     console.log(props);
     return(
@@ -118,7 +158,7 @@ const ChangePassForm = (props) => {
             <label htmlFor="newPassword2">Retype Password: </label>
             <input id="newPass2" type="password" name="newPass2" placeholder="New Password" />
             <input type="hidden" name="username" value={props.username} />
-            <input type="hidden" name="_csrf" value={props.csrf} />
+            <input id="csrf" type="hidden" name="_csrf" value={props.csrf} />
             <input className="changePassSubmit" type="submit" value="Update" />
         </form>
     );
@@ -131,6 +171,13 @@ const createWelcomeMessage = () => {
             document.querySelector("#welcomeMessage")
         );
     });
+};
+
+const createChangeUsernameForm = (csrf) => {
+    ReactDOM.render(
+        <ChangeUsernameForm csrf={csrf} />,
+        document.querySelector("#makeTask")    
+    );
 };
 
 const createChangePassForm = (csrf) => {
@@ -151,19 +198,30 @@ const loadTasksFromServer = (csrf) => {
     });
 };
 
-const setup = (csrf) => {
-    const changePassButton = document.querySelector("#changePassButton");
-
-    changePassButton.addEventListener("click", (e) => {
-        e.preventDefault();
-        createChangePassForm(csrf);
-        return false;
-    })
-
+const createTaskForm = (csrf) => {
     ReactDOM.render(
         <TaskForm csrf={csrf} />,
         document.querySelector("#makeTask")
     );
+};
+
+const setup = (csrf) => {
+    const changePassButton = document.querySelector("#changePassButton");
+    const changeUsernameButton = document.querySelector("#changeUsernameButton");
+
+    changePassButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        document.querySelector("#status").innerHTML = "<h3>Update your password</h3>";
+        createChangePassForm(csrf);
+    });
+
+    changeUsernameButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        document.querySelector("#status").innerHTML = "<h3>Enter a New Username</h3>";
+        createChangeUsernameForm(csrf);
+    });
+
+    createTaskForm(csrf);
 
     ReactDOM.render(
         <TaskList tasks={[]} />,

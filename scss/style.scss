@@ -70,8 +70,10 @@ nav {
     display: grid;
     grid-template-areas: 
         "ad1 calendar ad2"
+        "ad1 prompt ad2"
         "ad1 content ad2";
     padding-top: 100px; 
+    grid-template-rows: 40% 10% 30%;
 
     #ad1 {
         grid-area: ad1;
@@ -86,13 +88,19 @@ nav {
         height: 512px;
         margin: auto;
     }
+    #prompt {
+        grid-area: prompt;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
     #calendar {
         grid-area: calendar;
         margin: auto;
     }
     #content {
         grid-area: content;
-        padding-top: 80px;
+        padding-top: 20px;
     }
 }
 
@@ -100,7 +108,9 @@ nav {
     display: grid;
     grid-template-areas: 
         "ad1 makeTask ad2"
+        "ad1 status ad2"
         "ad1 tasks ad2";
+        padding-top: 20px;
 
     #ad1 {
         grid-area: ad1;
@@ -113,6 +123,12 @@ nav {
         width: 192px;
         height: 512px;
         margin: auto;
+    }
+    #status {
+        grid-area: status;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     #makeTask {
         grid-area: makeTask;
@@ -273,7 +289,7 @@ nav {
     width: 75%;
     min-width: 400px;
     margin: 0 auto;
-    margin-top: 100px;
+    margin-top: 20px;
 }
 
 .taskList {
