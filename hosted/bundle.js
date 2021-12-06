@@ -36,7 +36,7 @@ var handleChangeUsername = function handleChangeUsername(e) {
 
   sendAjax('POST', $("#changeUsernameForm").attr("action"), $("#changeUsernameForm").serialize(), function () {
     document.querySelector("#status").innerHTML = "<h3>Username updated!</h3>";
-    createTaskForm($("#csrf"));
+    createTaskForm($("#csrf").val());
     createWelcomeMessage();
   });
 }; //Validates password changes and sends POST request to the server
@@ -56,7 +56,7 @@ var handleChangePass = function handleChangePass(e) {
 
   sendAjax('POST', $("#changePassForm").attr("action"), $("#changePassForm").serialize(), function () {
     document.querySelector("#status").innerHTML = "<h3>Password updated!</h3>";
-    createTaskForm($("#csrf"));
+    createTaskForm($("#csrf").val());
   });
   return false;
 }; //Sends DELETE request to the server for a specific task name and description

@@ -35,7 +35,7 @@ const handleChangeUsername = (e) => {
     //Reloads the task form and welcome message
     sendAjax('POST', $("#changeUsernameForm").attr("action"), $("#changeUsernameForm").serialize(), () => {
         document.querySelector("#status").innerHTML = "<h3>Username updated!</h3>";
-        createTaskForm($("#csrf"));
+        createTaskForm($("#csrf").val());
         createWelcomeMessage();
     })
 };
@@ -56,7 +56,7 @@ const handleChangePass = (e) => {
     //Sends request to /changePass and reloads the task form
     sendAjax('POST', $("#changePassForm").attr("action"), $("#changePassForm").serialize(), () => {
         document.querySelector("#status").innerHTML = "<h3>Password updated!</h3>";
-        createTaskForm($("#csrf"));
+        createTaskForm($("#csrf").val());
     });
 
     return false;
